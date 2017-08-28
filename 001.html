@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    'use strict';
+
+    /* 순수 함수 */
+    const add = (a, b) => {
+        return a + b;
+    };
+
+    console.log(add(10, 5));
+    console.log(add(10, 5));
+    console.log(add(10, 5));
+
+    let c = 10;
+
+    const add2 = (a, b) => {
+        return a + b + c;
+    };
+
+    console.log(add2(10, 2));
+    console.log(add2(10, 3));
+    console.log(add2(10, 4));
+
+    c = 20;
+
+    const add3 = (a, b) => {
+        c = b;
+        return a + b;
+    };
+
+    console.log(`c: ${c}`);
+    console.log(add3(20, 30));
+    console.log(`c: ${c}`);
+
+    const obj1 = {val: 10};
+
+    const add4 = (obj, b) => {
+        obj.val += b;
+    };
+
+    console.log(obj1.val);
+    add4(obj1, 20);
+    console.log(obj1.val);
+
+    // 다시 순수 함수
+    const obj2 = {val: 10};
+
+    const add5 = (obj, b) => {
+        return {val: obj.val + b};
+    };
+
+    console.log(obj2.val);
+    const obj3 = add5(obj2, 20);
+    console.log(obj2.val);
+    console.log(obj3.val);
+
+    /* 일급 함수 */
+    const f1 = a => a * a;
+    console.log(f1);
+
+    const f2 = add;
+    console.log(f2);
+
+    const f3 = f => f();
+    console.log(f3(() => 10));
+    console.log(f3(() => 20));
+
+    console.clear();
+
+    /* add_maker */
+    const add_maker = a => {
+        return b => a + b;
+    };
+
+    const add10 = add_maker(10);
+    console.log(add10(20));
+
+    const add_5 = add_maker(5);
+    const add_15 = add_maker(15);
+    console.log(add_5(10));
+    console.log(add_15(10));
+
+    const f4 = (f1, f2, f3) => {
+        return f3(f1() + f2());
+    };
+
+    console.log(
+        f4(
+            () => 2,
+            () => 1,
+            a => a * a
+        ));
+
+
+</script>
+</html>
