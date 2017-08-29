@@ -111,9 +111,6 @@
 
     // 4 커링
     // 4.1 _curry, _curryr
-    const _curry = fn => (a, ...rest) => rest.length > 0 ? fn(a, rest[0]) : b => fn(a, b);
-
-    const _curryr = fn => (a, ...rest) => rest.length > 0 ? fn(a, rest[0]) : b => fn(b, a);
 
     const add = _curry((a, b) => a + b);
 
@@ -134,7 +131,6 @@
     console.log(sub10(5));
 
     // 4.2 _get 을 만들어 좀 더 간단하게 하기
-    const _get = _curryr((obj, key) => obj == null ? undefined : obj[key]);
 
     const user1 = users[0];
     console.log(user1.name);
@@ -153,8 +149,57 @@
 //    console.log(users[10].name);
     console.log(_get(users[10], "name"));
 
+    console.clear();
+
     // 5. _reduce 만들기
 
+    console.log(
+        _reduce([1, 2, 3, 4], add, 10)
+    );
+
+    console.log(
+        _reduce([1, 2, 3, 4], add)
+    );
+
+    console.log(
+        _reduce({ 0: 2, 1: 4, length: 2 }, add)
+    );
+
     // 6. 파이프라인 만들기
+    // 6.1 _pipe
+
+    const f1 = _pipe(
+        a => a + 1,
+        a => a * 2,
+        a => a * a
+    );
+
+    console.log(f1(1));
+
+    _go(1,
+        a => a + 1,
+        a => a * 2,
+        a => a * a,
+        console.log);
+
+    _go(users,
+        (users) => _filter(users, user => user.age >= 30),
+        (users) => _map(users, _get('name')),
+        console.log);
+
+    _go(users,
+        (users) => _filter(users, user => user.age < 30),
+        (users) => _map(users, _get('age')),
+        console.log);
+
+    _go(users,
+        _filter(user => user.age >= 30),
+        _map(_get('name')),
+        console.log);
+
+    _go(users,
+        _filter(user => user.age < 30),
+        _map(_get('age')),
+        console.log);
 </script>
 </html>
