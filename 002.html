@@ -201,5 +201,26 @@
         _filter(user => user.age < 30),
         _map(_get('age')),
         console.log);
+
+    console.clear();
+
+    // 7 _each 의 외부 다형성 높이기
+    // 7.1 _each 에 null 넣어도 에러 안나게
+    _each(null, console.log);
+    console.log( _map(null, v => v) );
+    console.log( _filter(null, v => v) );
+
+    _go(null,
+        _filter(v => v % 2),
+        _map(v => v * v),
+        console.log)
+
+    // 7.2 _keys 만들기
+
+    // 7.3 _keys 에서도 _is_object 인지 검사하여 null 에러 안 나게
+
+    // 7.4 _each 외부 다형성 높이기
+
+
 </script>
 </html>

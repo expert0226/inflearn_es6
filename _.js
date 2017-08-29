@@ -4,8 +4,12 @@ const _curry = fn => (a, ...rest) => rest.length > 0 ? fn(a, rest[0]) : b => fn(
 
 const _curryr = fn => (a, ...rest) => rest.length > 0 ? fn(a, rest[0]) : b => fn(b, a);
 
+const _get = _curryr((obj, key) => obj == null ? undefined : obj[key]);
+
+var _length = _get('length');
+
 const _each = (list, iter) => {
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0, len = _length(list); i < len; i++) {
         iter(list[i]);
     }
     return list;
@@ -25,12 +29,10 @@ const _map = _curryr((list, mapper) => {
     return new_list;
 });
 
-const _get = _curryr((obj, key) => obj == null ? undefined : obj[key]);
-
 const _rest = (list, num) => Array.from(list).slice(num || 1);
 
 const _reduce = (list, iter, memo) => {
-    if (!memo) {
+    if (memo === undefined) {
         memo = list[0];
         list = _rest(list);
     }
@@ -40,7 +42,6 @@ const _reduce = (list, iter, memo) => {
 
 const _pipe = (...fns) => arg => _reduce(fns, (arg, fn) => fn(arg), arg);
 
-const _go = (...args) => {
-    const fns = _rest(args);
-    return _pipe(...fns)(args[0]);
+const _go = (arg, ...fns) => {
+    return _pipe(...fns)(arg);
 };
