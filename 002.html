@@ -213,13 +213,34 @@
     _go(null,
         _filter(v => v % 2),
         _map(v => v * v),
-        console.log)
+        console.log);
 
     // 7.2 _keys 만들기
+
+    console.log( _keys({ name: 'ID', age: 33 }) );
+    console.log( _keys([1, 2, 3, 4]) );
+    console.log( _keys(10) );
+    console.log( _keys(null) );
 
     // 7.3 _keys 에서도 _is_object 인지 검사하여 null 에러 안 나게
 
     // 7.4 _each 외부 다형성 높이기
+    _each({ 13: 'ID', 19: 'HD', 29: 'YD'},
+        name => console.log(name));
+
+    console.log(
+        _map({ 13: 'ID', 19: 'HD', 29: 'YD'}, name => name.toLowerCase()));
+
+    _go(
+        { 13: 'ID', 19: 'HD', 29: 'YD'},
+        console.log
+    );
+
+    _go(
+        { 13: 'ID', 19: 'HD', 29: 'YD'},
+        _map(name => name.toLowerCase()),
+        console.log
+    );
 
 
 </script>

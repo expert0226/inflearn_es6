@@ -6,11 +6,17 @@ const _curryr = fn => (a, ...rest) => rest.length > 0 ? fn(a, rest[0]) : b => fn
 
 const _get = _curryr((obj, key) => obj == null ? undefined : obj[key]);
 
+const _is_object = obj => typeof obj === 'object' && !!obj;
+
+const _keys = obj => _is_object(obj) ? Object.keys(obj) : [];
+
 var _length = _get('length');
 
 const _each = (list, iter) => {
-    for (let i = 0, len = _length(list); i < len; i++) {
-        iter(list[i]);
+    const kegys = _keys(list);
+
+    for (let i = 0, len = keys.length; i < len; i++) {
+        iter(list[keys[i]]);
     }
     return list;
 };
