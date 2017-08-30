@@ -13,7 +13,7 @@ const _keys = obj => _is_object(obj) ? Object.keys(obj) : [];
 var _length = _get('length');
 
 const _each = (list, iter) => {
-    const kegys = _keys(list);
+    const keys = _keys(list);
 
     for (let i = 0, len = keys.length; i < len; i++) {
         iter(list[keys[i]]);
@@ -51,3 +51,8 @@ const _pipe = (...fns) => arg => _reduce(fns, (arg, fn) => fn(arg), arg);
 const _go = (arg, ...fns) => {
     return _pipe(...fns)(arg);
 };
+
+const _identity = val => val;
+
+const _values = _map(_identity);
+

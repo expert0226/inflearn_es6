@@ -26,5 +26,26 @@ const users = [
     { id: 7, name: 'JI', age: 31 },
     { id: 8, name: 'MP', age: 23 }
 ];
+
+// 컬렉션 중심 프로그래밍의 유형별 함수 만들기
+// 1. 수집하기 - map
+console.log(
+    _map(users, user => user.name)
+);
+
+// 1.1 values
+const a = 10;
+//console.log( _identity(a) );
+//console.log(users[0]);
+//console.log(_keys(users[0]));
+//console.log(_values(users[0]));
+//console.log(_map(_identity)(users[0]));
+
+// 1.2 pluck
+const _pluck = (data, key) => _map(data, _get(key));
+
+console.log( _pluck(users, 'age') );
+console.log( _pluck(users, 'name') );
+console.log( _pluck(users, 'id') );
 </script>
 </html>
