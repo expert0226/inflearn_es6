@@ -47,5 +47,38 @@ const _pluck = (data, key) => _map(data, _get(key));
 console.log( _pluck(users, 'age') );
 console.log( _pluck(users, 'name') );
 console.log( _pluck(users, 'id') );
+
+// 2. 거르기 - filter
+console.log(_filter(users, user => user.age > 30));
+
+// 2.1 reject
+console.log(_reject(users, user => user.age > 30));
+// 2.2 compact
+console.log(_compact([1, 2, 0, false, null, {}]));
+
+// 3. 찾아내기 - find
+// 3.1 find 만들기
+
+
+console.log(_find(users, user => user.age < 30));
+console.log(_find(users, user => user.id == 20));
+
+// 3.2 find_index
+
+console.log(_find_index(users, user => user.id == 5))
+
+console.log(_go(users,
+    _find(user => user.id == 5))
+);
+
+// 3.3 some
+
+console.log(_some([1, 2, 5, 10, 20], val => val > 10));
+
+// 3.4 every
+console.log(_every([1, 2, 5, 10, 20], val => val > 10));
+console.log(_every([1, 2, 5, 10, 20], val => val > 0));
+console.log(_some([1, 2, 0, 10]));
+console.log(_every([1, 2, 0, 10]));
 </script>
 </html>
