@@ -80,5 +80,63 @@ console.log(_every([1, 2, 5, 10, 20], val => val > 10));
 console.log(_every([1, 2, 5, 10, 20], val => val > 0));
 console.log(_some([1, 2, 0, 10]));
 console.log(_every([1, 2, 0, 10]));
+
+console.clear();
+
+// 4. 접기 - reduce
+// 4.1 min, max, min_by, max_by
+
+console.log(_min([1, 2, 4, 10, 5, -4]));
+
+console.log(_max([1, 2, 4, 10, 5, -4]));
+
+console.log(_min_by([1, 2, 4, 10, 5, -4], Math.abs));
+
+console.log(_max_by([1, 2, 4, 10, 5, -4], Math.abs));
+
+console.log(_min_by(users, user => user.age));
+
+_go(users,
+    _filter(user => user.age >= 30),
+    _min_by(_get('age')),
+    console.log);
+
+_go(users,
+    _reject(user => user.age >= 30),
+    _min_by(_get('age')),
+    _get('name'),
+    console.log);
+
+// 4.2 group_by, push
+const _push = (obj, key, val) => (obj[key] = obj[key] || []).push(val);
+
+const _group_by= _curryr((data, iter) => {
+    return _reduce(data, (grouped, val) => {
+        _push(grouped, iter(val), val);
+        return grouped;
+    }, {});
+});
+
+const _head = list => list[0];
+
+console.log(_group_by(users, user => parseInt(user.age / 10)));
+
+console.log(_group_by(users, _get('age')));
+
+console.log(_group_by(users, user => user.age - user.age % 10));
+
+console.log(_group_by(users, user => user.name[0]));
+
+_go(users,
+    _group_by(user => user.name[0]),
+    console.log);
+
+_go(users,
+    _group_by())
+
+
+
+// 4.3 count_by, inc
+
 </script>
 </html>

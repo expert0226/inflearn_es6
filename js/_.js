@@ -58,7 +58,7 @@ const _values = _map(_identity);
 
 const _negate = func => val => !func(val);
 
-const _reject = (data, predi) => _filter(data, _negate(predi));
+const _reject = _curryr((data, predi) => _filter(data, _negate(predi)));
 
 const _compact = _filter(_identity);
 
@@ -81,3 +81,11 @@ const _find_index = _curryr((list, predi) => {
 const _some = (data, predi) => _find_index(data, predi || _identity) != -1;
 
 const _every = (data, predi) => _find_index(data, _negate(predi || _identity)) == -1;
+
+const _min = data => _reduce(data, (a, b) => a < b ? a : b);
+
+const _max = data => _reduce(data, (a, b) => a > b ? a : b);
+
+const _min_by = _curryr((data, iter) => _reduce(data, (a, b) => iter(a) < iter(b) ? a : b));
+
+const _max_by = _curryr((data, iter) => _reduce(data, (a, b) => iter(a) > iter(b) ? a : b));
