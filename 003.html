@@ -108,16 +108,6 @@ _go(users,
     console.log);
 
 // 4.2 group_by, push
-const _push = (obj, key, val) => (obj[key] = obj[key] || []).push(val);
-
-const _group_by= _curryr((data, iter) => {
-    return _reduce(data, (grouped, val) => {
-        _push(grouped, iter(val), val);
-        return grouped;
-    }, {});
-});
-
-const _head = list => list[0];
 
 console.log(_group_by(users, user => parseInt(user.age / 10)));
 
@@ -127,16 +117,53 @@ console.log(_group_by(users, user => user.age - user.age % 10));
 
 console.log(_group_by(users, user => user.name[0]));
 
+console.log(_group_by(users, _pipe(_get('name'), _head)));
+
 _go(users,
     _group_by(user => user.name[0]),
     console.log);
 
-_go(users,
-    _group_by())
-
-
-
 // 4.3 count_by, inc
+
+console.log(_count_by(users, user => user.age));
+
+console.log(_count_by(users, user => user.age - user.age % 10));
+
+console.log(_count_by(users, user => user.name[0]));
+
+_map([1, 2, 3], console.log);
+
+_map(users[0], console.log);
+
+console.log(_map(users[0], (val, key) => [key, val]));
+
+console.log(_pairs(users[0]));
+
+console.clear();
+
+const _document_write = text => document.write(text);
+
+_go(users,
+    _filter(user => user.age >= 20),
+    _count_by(user => user.age - user.age % 10),
+    _map((count, key) => `<li>${key} 대는 ${count} 명 입니다.</li>`),
+    list => '<ul>' + list.join('') + '</ul>',
+    _document_write);
+
+const f1 = _pipe(
+    _filter(user => user.age >= 20),
+    _count_by(user => user.age - user.age % 10),
+    _map((count, key) => `<li>${key} 대는 ${count} 명 입니다.</li>`),
+    list => '<ul>' + list.join('') + '</ul>',
+    _document_write);
+
+f1(users);
+
+const f2 = _pipe(_reject(user => user.age < 20), f1);
+
+f2(users);
+
+_go(users, _reject(user => user.age < 20), f1);
 
 </script>
 </html>

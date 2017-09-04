@@ -16,7 +16,7 @@ const _each = (list, iter) => {
     const keys = _keys(list);
 
     for (let i = 0, len = keys.length; i < len; i++) {
-        iter(list[keys[i]]);
+        iter(list[keys[i]], keys[i]);
     }
     return list;
 };
@@ -31,7 +31,7 @@ const _filter = _curryr((list, predi) => {
 
 const _map = _curryr((list, mapper) => {
     const new_list = [];
-    _each(list, val => new_list.push(mapper(val)));
+    _each(list, (val, key) => new_list.push(mapper(val, key)));
     return new_list;
 });
 
@@ -89,3 +89,26 @@ const _max = data => _reduce(data, (a, b) => a > b ? a : b);
 const _min_by = _curryr((data, iter) => _reduce(data, (a, b) => iter(a) < iter(b) ? a : b));
 
 const _max_by = _curryr((data, iter) => _reduce(data, (a, b) => iter(a) > iter(b) ? a : b));
+
+const _push = (obj, key, val) => (obj[key] = obj[key] || []).push(val);
+
+const _group_by= _curryr((data, iter) => {
+    return _reduce(data, (grouped, val) => {
+        _push(grouped, iter(val), val);
+        return grouped;
+    }, {});
+});
+
+const _head = list => list[0];
+
+const _inc = (count, key) => {
+    count[key] ? count[key]++ : count[key] = 1;
+    return count;
+};
+
+const _count_by = _curryr((data, iter) => _reduce(data, (count, val) => {
+    const key = iter(val);
+    return _inc(count, key);
+}, {}));
+
+const _pairs = _map((val, key) => [key, val]);
