@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>5. 실전코드조각-1</title>
+    <script src="js/partial.js"></script>
+    <script src="js/_.js"></script>
+</head>
+<body>
+
+</body>
+<script>
+var users = [
+    { id: 101, name: 'ID' },
+    { id: 102, name: 'BJ' },
+    { id: 103, name: 'PJ' },
+    { id: 104, name: 'HA' },
+    { id: 105, name: 'JE' },
+    { id: 106, name: 'JI' }
+];
+var posts = [
+    { id: 201, body: '내용1', user_id: 101 },
+    { id: 202, body: '내용2', user_id: 102 },
+    { id: 203, body: '내용3', user_id: 103 },
+    { id: 204, body: '내용4', user_id: 102 },
+    { id: 205, body: '내용5', user_id: 101 },
+];
+var comments = [
+    { id: 301, body: '댓글1', user_id: 105, post_id: 201 },
+    { id: 302, body: '댓글2', user_id: 104, post_id: 201 },
+    { id: 303, body: '댓글3', user_id: 104, post_id: 202 },
+    { id: 304, body: '댓글4', user_id: 105, post_id: 203 },
+    { id: 305, body: '댓글5', user_id: 106, post_id: 203 },
+    { id: 306, body: '댓글6', user_id: 106, post_id: 204 },
+    { id: 307, body: '댓글7', user_id: 102, post_id: 205 },
+    { id: 308, body: '댓글8', user_id: 103, post_id: 204 },
+    { id: 309, body: '댓글9', user_id: 103, post_id: 202 },
+    { id: 310, body: '댓글10', user_id: 105, post_id: 201 }
+];
+
+const posts_by = attr => _.where(posts, attr);
+
+const comments_by_posts = _.pipe(
+    _.pluck('id'),
+    _ids => _.filter(comments, comment => _.contains(_ids, comment.post_id)));
+
+// 1. 특정인의 posts 의 모든 comments 거르기
+_.go(
+    _.filter(posts, post => post.user_id == users[0].id),
+    _posts => _.filter(comments, comment => _.find(_posts, _post => _post.id == comment.post_id)),
+    console.log
+);
+
+_.go(
+    { user_id: users[0].id },
+    posts_by,
+    _.pluck('id'),
+    _ids => _.filter(comments, comment => _.contains(_ids, comment.post_id)),
+    console.log
+);
+
+const f1 = _.pipe(posts_by, comments_by_posts);
+
+console.log(f1({ user_id: users[0].id }));
+
+// 2. 특정인의 posts 에 comments 를 단 친구의 이름들 뽑기
+_.go(
+    posts_by({ user_id: users[0].id }),
+    _.pluck('id'),
+    _ids => _.filter(comments, comment => _.contains(_ids, comment.post_id)),
+    _.pluck('user_id'),
+    _uids => _.filter(users, user => _.contains(_uids, user.id)),
+    _.map(user => user.name),
+    console.log
+);
+
+_.go(
+    { user_id: users[0].id },
+    posts_by,
+    comments_by_posts,
+    _.map(comment => _.find(users, user => user.id == comment.user_id).name),
+    _.uniq,
+    console.log
+);
+
+const comments_to_user_names = _.map(comment => _.find(users, user => user.id == comment.user_id).name);
+
+const f2 = _.pipe(f1, comments_to_user_names, _.uniq);
+
+console.log(f2({ user_id: users[0].id },));
+
+// 3. 특정인의 posts 에 comments 를 단 친구들 카운트 뽑기
+_.go(
+    { user_id: users[0].id },
+    f2,
+    _.count_by,
+    console.log
+);
+
+const f3 = _pipe(f1, comments_to_user_names, _.count_by);
+
+console.log(f3({ user_id: users[0].id }));
+
+// 4. 특정인이 comment 를 단 posts 거르기
+const comments_by_user_id = attr => _.where(comments, attr);
+
+_go(
+    { user_id: users[4].id },
+    comments_by_user_id,
+    _.pluck("post_id"),
+    _.uniq,
+    _post_ids => _filter(posts, post => _.contains(_post_ids, post.id)),
+    console.log
+);
+
+
+
+</script>
+</html>
