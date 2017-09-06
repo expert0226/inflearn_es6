@@ -113,7 +113,75 @@ _go(
     console.log
 );
 
+console.clear();
 
+// 5. users + posts + comments (index_by 와 group_by 로 효율 높이기)
+//const comments2 = _.reduce(comments, (arr, comment) => {
+//    const cmt = _.clone(comment);
+//    cmt["users"] = _.find(users, user => user.id === cmt.user_id);
+//    arr.push(cmt);
+//    return arr;
+//}, []);
+const users2 = _.index_by(users, 'id');
 
+const comments2 = _.go(comments,
+    _.map(comment => _.extend({
+            user: users2[comment.user_id] || []
+        }, comment)),
+    _.group_by("post_id"));
+
+const posts2 = _.map(posts,
+    post => _.extend({
+            comments: comments2[post.id] || [],
+            user: users2[post.user_id] || []
+        }, post));
+
+const posts3 = _.group_by(posts2, "user_id");
+
+const users3 = _.map(users2,
+    user => _.extend({
+            posts: posts3[user.id] || []
+        },
+        user));
+
+console.log(users3);
+
+// 5.1 특정인의 posts 의 모든 comments 거르기
+const user = users3[0];
+
+_.go(user.posts,
+    _.pluck('comments'),
+    _.flatten,
+    console.log);
+
+console.log(_.deep_pluck(user, 'posts.comments'));
+
+// 5.2 특정인의 posts 에 comments 를 단 친구의 이름들 뽑기
+_.go(user.posts,
+    _.pluck('comments'),
+    _.flatten,
+    _.pluck('user'),
+    _.pluck('name'),
+    _.uniq,
+    console.log);
+
+console.log(_.uniq(_.deep_pluck(user, 'posts.comments.user.name')));
+
+// 5.3 특정인의 posts 에 comments 를 단 친구들 카운트 뽑기
+_.go(user.posts,
+    _.pluck('comments'),
+    _.flatten,
+    _.pluck('user'),
+    _.pluck('name'),
+    _.count_by,
+    console.log);
+
+_.go(user, _.deep_pluck('posts.comments.user.name'), _.count_by, console.log);
+
+// 5.4 특정인이 comment 를 단 posts 거르기
+console.log(_.filter(
+    posts2,
+    post => _.find(post.comments,
+        comment => comment.user_id === 105)));
 </script>
 </html>
